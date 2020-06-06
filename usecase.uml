@@ -1,0 +1,31 @@
+@startuml
+left to right direction
+actor "Korlur" as fc
+actor "Operator" as op
+
+rectangle "Sistem Pendukung Keputusan Santri Berprestasi" {
+(Mengelola Data Santri) .> (Login) : include
+(Mengelola Data Operator) .> (Login) : include
+(Mengelola Data Tahun Ajaran) .> (Login) : include
+(Mengelola Data UAD) .> (Login) : include
+(Mengelola Data Perilaku) .> (Login) : include
+(Mengelola Data Tahfidz) .> (Login) : include
+(Mengelola Data Presensi) .> (Login) : include
+
+  fc -->(Mengelola Data Santri)
+  fc -->(Mengelola Data Operator)
+  fc -->(Mengelola Data Tahun Ajaran)
+  fc -->(Mengelola Data UAD) 
+  fc -->(Mengelola Data Perilaku)
+  fc -->(Mengelola Data Tahfidz) 
+  fc -->(Mengelola Data Presensi)
+fc --> (Mengelola Data DTA) 
+fc --> (Mengelola Data Kelas)
+fc --> (Mengelola Data Mata Pelajaran) 
+(Mengelola Data Perilaku) <-- op
+  (Mengelola Data Tahfidz) <-- op
+  (Mengelola Data Presensi) <-- op
+(Mengelola Data UAD) <-- op
+ 
+}
+@enduml

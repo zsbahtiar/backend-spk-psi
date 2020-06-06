@@ -1,0 +1,87 @@
+@startuml
+
+class Santri {
+   id : integer
+   no_induk : string
+   nik : string
+   name : string
+   place_born : string
+   birth_date: date
+   gender : string
+   dta_id : integer
+   created_at : date
+   update_at :date
+}
+class TahunAjaran {
+	id: integer
+	name : string
+	created_at : date
+	updated_at : date
+}
+class Kelas{
+	id : integer
+	name : string
+	created_at : date
+	updated_at : date
+}
+class KelasDetail{
+	id : integer
+	id_kelas : integer
+	id_tahunajaran : integer
+	id_santri : integer
+	created_at : date
+	updated_at : date
+}
+class Dta {
+	id: integer
+	no_statistik : string
+	name : string
+	address : string
+	headmaster : string
+}
+class MataPelajaran {
+	id: integer
+	name : string
+	created_at : date
+	updated_at : date
+}
+
+class Uad {
+	id: integer
+	id_mata_pelajaran : integer
+	id_santri : integer
+	nilai : integer
+	created_at : date
+	updated_at : date
+}
+
+class Tahfidz{
+	id: integer
+	id_santri : integer
+	jumlah : integer
+}
+class Perilaku{
+	id : integer
+	id_santri : integer
+	perilaku : string
+	created_at : string
+	updated_at : string
+}
+class Operator{
+	id : integer
+	name : string
+	password : string
+	email : string
+	dta_id : string
+	created_at : date
+	updated_at : date
+}
+class User{
+	id: integer
+	name : string
+	password : string
+	email : string
+	created_at : date
+	updated_at : date
+}
+@enduml

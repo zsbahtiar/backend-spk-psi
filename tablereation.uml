@@ -1,0 +1,122 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+class "Santri" as santri {
+   *id : integer <<PK>>
+   --
+   no_induk : string
+   nik : string
+   name : string
+   place_born : string
+   birth_date: date
+   gender : string
+   *dta_id : integer <<FK>>
+   created_at : date
+   update_at :date
+}
+class "TahunAjaran" as tahunajaran {
+	*id: integer <<PK>>
+	--
+	name : string
+	created_at : date
+	updated_at : date
+}
+class "Kelas" as kelas{
+	*id : integer <<PK>>
+	--
+	name : string
+	created_at : date
+	updated_at : date
+}
+class "KelasDetail" as kelas_detail{
+	*id : integer <<PK>>
+	--
+	*kelas_id : integer <<FK>>
+	*tahunajaran_id : integer <<FK>>
+	*santri_id : integer <<FK>>
+	created_at : date
+	updated_at : date
+}
+class "Dta" as dta {
+	*id: integer <<PK>>
+	--
+	no_statistik : string
+	name : string
+	address : string
+	headmaster : string
+	created_at : date
+	updated_at : date
+}
+class "MataPelajaran" as matpel {
+	*id: integer <<PK>>
+	--
+	name : string
+	created_at : date
+	updated_at : date
+}
+
+class "Uad" as uad {
+	*id: integer <<PK>>
+	--
+	*matapelajaran_id : integer <<FK>>
+	*santri_id : integer <<FK>>
+	*kelas_detail_id : integer <<FK>>
+	nilai : integer
+	created_at : date
+	updated_at : date
+}
+
+class "Tahfidz" as tahfidz{
+	*id: integer <<PK>>
+	--
+	*santri_id : integer <<FK>>
+	*kelas_detail_id : integer <<FK>>
+	jumlah : integer
+	created_at : date
+	updated_at : date
+}
+class "Perilaku" as perilaku{
+	*id : integer <<PK>>
+	--
+	*santri_id : integer <<FK>>
+	*kelas_detail_id : integer <<FK>>
+	perilaku : string
+	created_at : string
+	updated_at : string
+}
+class "Operator" as operator{
+	*id : integer <<PK>>
+	--
+	name : string
+	password : string
+	email : string
+	*dta_id : string <<FK>>
+	created_at : date
+	updated_at : date
+}
+class "User" as user{
+	*id: integer <<PK>>
+	--
+	name : string
+	password : string
+	email : string
+	created_at : date
+	updated_at : date
+}
+santri -- dta
+tahunajaran -- kelas_detail
+kelas -- kelas_detail
+santri -- kelas_detail
+matpel -- uad
+santri -- uad
+kelas_detail -- uad
+santri -- tahfidz
+kelas_detail -- tahfidz
+santri -- perilaku
+kelas_detail -- perilaku
+dta -- operator
+@enduml
