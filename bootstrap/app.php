@@ -94,7 +94,16 @@ $app->routeMiddleware([
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
-
+/* 
+|
+|---------------------------------------------------------------------------
+| Lumen Route List
+|---------------------------------------------------------------------------
+|
+| Get all route
+|
+*/
+$app->register(\Thedevsaddam\LumenRouteList\LumenRouteListServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
