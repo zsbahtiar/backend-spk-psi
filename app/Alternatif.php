@@ -33,7 +33,8 @@ class Alternatif extends Model
         
     ];
 
-    public function new($data){
+    public function new($data)
+    {
         $this->dta_id = $data["dta_id"];
         $this->no_induk_dta = $data["no_induk_dta"];
         $this->nik = $data["nik"];
@@ -42,16 +43,26 @@ class Alternatif extends Model
         
         $this->save();
     }
-    public function get_select($id){
+    public function get_select($id)
+    {
         return DB::table('alternatif')
             ->join('dta', 'alternatif.dta_id', '=', 'dta.id')
             ->select('alternatif.*', 'dta.name as nama_dta', 'dta.headmaster')
             ->where('alternatif.id', $id)->limit(1)->get();
     }
-    public function get_all(){
+    public function get_all()
+    {
         return DB::table('alternatif')
             ->join('dta', 'alternatif.dta_id', '=', 'dta.id')
             ->select('alternatif.*', 'dta.name as nama_dta', 'dta.headmaster')
+            ->get();   
+    }
+    public function AlternatifToResult()
+    {
+        return DB::table('alternatif')
+            ->join('dta', 'alternatif.dta_id', '=', 'dta.id')
+            ->select('alternatif.*', 'dta.name as dta_name')
+            ->orderByRaw('id')
             ->get();   
     }
 }

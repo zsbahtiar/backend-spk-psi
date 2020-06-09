@@ -107,4 +107,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
      $router->post('value/create', 'ValuesCriteriaController@store');
      $router->put('value/{id}/update', 'ValuesCriteriaController@update');
      $router->delete('value/{id}/delete/', 'ValuesCriteriaController@remove');
+     
+
+     /**
+     *
+     * Create a new router
+     * For Solving
+     * 
+     */
+
+     $router->get('solve/{step}', 'ResultController@solve');
 });

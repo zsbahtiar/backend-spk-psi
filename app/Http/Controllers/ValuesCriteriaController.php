@@ -7,6 +7,7 @@ use App\ValuesOfCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
+
 class ValuesCriteriaController extends Controller
 {
     /**

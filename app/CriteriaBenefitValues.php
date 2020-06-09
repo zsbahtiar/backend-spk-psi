@@ -6,6 +6,7 @@ namespace App;
 // use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 // use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 // use Laravel\Lumen\Auth\Authorizable;
 
 class CriteriaBenefitValues extends Model// implements AuthenticatableContract, AuthorizableContract
@@ -37,5 +38,13 @@ class CriteriaBenefitValues extends Model// implements AuthenticatableContract, 
         $this->value = $data["value"];
 
         $this->save();
+    }
+
+    public function isBenefit($id)
+    {
+        return DB::table('values_of_criteria')
+            ->join('criterias', 'values_of_criteria.criteria_id', '=', 'criterias.id')
+            ->select('criterias.category')
+            ->where('values_of_criteria.id', $id)->get();
     }
 }
