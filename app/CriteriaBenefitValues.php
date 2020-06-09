@@ -8,16 +8,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 // use Laravel\Lumen\Auth\Authorizable;
 
-class Todo extends Model
+class CriteriaBenefitValues extends Model// implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'todo'; 
+    protected $table = 'criterias_benefit_values';
+    // use Authenticatable, Authorizable;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'activity', 'desecription'
+        'name','value',
     ];
 
     /**
@@ -25,5 +27,15 @@ class Todo extends Model
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = [
+        '',
+    ];
+
+    public function new($data)
+    {
+        $this->name = $data["name"];
+        $this->value = $data["value"];
+
+        $this->save();
+    }
 }

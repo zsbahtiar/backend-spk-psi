@@ -8,9 +8,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 // use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model// implements AuthenticatableContract, AuthorizableContract
+class Operator extends Model// implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'users';
+    protected $table = 'operator';
     // use Authenticatable, Authorizable;
 
     /**
@@ -18,8 +18,9 @@ class User extends Model// implements AuthenticatableContract, AuthorizableContr
      *
      * @var array
      */
+
     protected $fillable = [
-        'name','gender','email','token_login',
+        'dta_id','name','gender','email','token_login',
     ];
 
     /**
@@ -33,6 +34,7 @@ class User extends Model// implements AuthenticatableContract, AuthorizableContr
 
     public function new($data)
     {
+        $this->dta_id = $data["dta_id"];
         $this->name = $data["name"];
         $this->gender = $data["gender"];
         $this->email = $data["email"];

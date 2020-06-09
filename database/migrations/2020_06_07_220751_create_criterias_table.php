@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TableTodo extends Migration
+class CreateCriteriasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class TableTodo extends Migration
      */
     public function up()
     {
-        Schema::create('todo', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('activity',200);
-            $table->text('description');
+        Schema::create('criterias', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name',80)->unique();
+            $table->string('alias',3)->unique();
+            $table->enum('category', ['beneficial', 'non']);
             $table->timestamps();
-            // $table->id();
-            // $table->timestamps();
         });
     }
 
@@ -30,6 +29,6 @@ class TableTodo extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todo');
+        Schema::dropIfExists('criterias');
     }
 }

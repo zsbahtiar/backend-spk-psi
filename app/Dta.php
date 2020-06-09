@@ -8,10 +8,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 // use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model// implements AuthenticatableContract, AuthorizableContract
+class Dta extends Model
 {
-    protected $table = 'users';
     // use Authenticatable, Authorizable;
+
+    protected $table = 'dta';
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +20,7 @@ class User extends Model// implements AuthenticatableContract, AuthorizableContr
      * @var array
      */
     protected $fillable = [
-        'name','gender','email','token_login',
+        'no_statistik','name','address','headmaster',
     ];
 
     /**
@@ -28,14 +29,14 @@ class User extends Model// implements AuthenticatableContract, AuthorizableContr
      * @var array
      */
     protected $hidden = [
-        '',
+        
     ];
 
-    public function new($data)
-    {
+    public function new($data){
+        $this->no_statistik = $data["no_statistik"];
         $this->name = $data["name"];
-        $this->gender = $data["gender"];
-        $this->email = $data["email"];
+        $this->address = $data["address"];
+        $this->headmaster = $data["headmaster"];
 
         $this->save();
     }
