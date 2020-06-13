@@ -19,11 +19,11 @@ class Criteria extends Model// implements AuthenticatableContract, AuthorizableC
      * @var array
      */
     protected $fillable = [
-        'name','alias','category',
+        'name','alias','category','weight',
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
+     * The attributes excluded from the models JSON form
      *
      * @var array
      */
@@ -36,6 +36,7 @@ class Criteria extends Model// implements AuthenticatableContract, AuthorizableC
         $this->name = $data["name"];
         $this->alias = $data["alias"];
         $this->category = $data["category"];
+        $this->weight = $data["weight"];
 
         $this->save();
     }

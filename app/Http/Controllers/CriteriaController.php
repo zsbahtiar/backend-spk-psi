@@ -59,7 +59,8 @@ class CriteriaController extends Controller
         $name = $request->input('name');
         $alias = $request->input('alias');
         $category = $request->input('category');
-        if($name == null || $category == null || $alias == null){
+        $weight = $request->input('weight');
+        if($name == null || $category == null || $alias == null || $weight == null){
             return response()->json([
                     'success' => false,
                     'message' => 'One of the required attributes were empty',
@@ -69,7 +70,8 @@ class CriteriaController extends Controller
                     $data = array(
                         'name' => $name,
                         'alias' => $alias,
-                        'category' => $category
+                        'category' => $category,
+                        'weight' => $weight
                     );
                     $save = $this->criteria->new($data);  
 
@@ -93,9 +95,10 @@ class CriteriaController extends Controller
         $name = $request->input('name');
         $category = $request->input('category');
         $alias = $request->input('alias');
+        $weight = $request->input('weight');
 
         if($isExists){
-            if($name == null || $category == null || $alias == null){
+            if($name == null || $category == null || $alias == null || $weight == null){
                 return response()->json([
                     'success' => false,
                     'message' => 'One of the required attributes were empty',
@@ -104,7 +107,8 @@ class CriteriaController extends Controller
                 $data = array(
                         'name' => $name,
                         'alias' => $alias,
-                        'category' => $category
+                        'category' => $category,
+                        'weight' => $weight
                     );
                 try{
                     $update = $this->criteria::where('id',$id)->update($data);

@@ -16,8 +16,9 @@ class CreateCriteriasTable extends Migration
         Schema::create('criterias', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',80)->unique();
-            $table->string('alias',3)->unique();
-            $table->enum('category', ['beneficial', 'non']);
+            $table->string('alias',5)->unique();
+            $table->enum('category', ['benefit', 'cost']);
+            $table->unsignedInteger('weight');
             $table->timestamps();
         });
     }

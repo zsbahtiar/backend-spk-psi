@@ -69,18 +69,6 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
      $router->put('criteria/{id}/update', 'CriteriaController@update');
      $router->delete('criteria/{id}/delete/', 'CriteriaController@remove');
 
-     /**
-     *
-     * Create a new router
-     * For CriteriaBenefit
-     * 
-     */
-
-     $router->get('criteria_benefit/', 'CriteriaBenefitValuesController@index');
-     $router->get('criteria_benefit/{id}', 'CriteriaBenefitValuesController@show');
-     $router->post('criteria_benefit/create', 'CriteriaBenefitValuesController@store');
-     $router->put('criteria_benefit/{id}/update', 'CriteriaBenefitValuesController@update');
-     $router->delete('criteria_benefit/{id}/delete/', 'CriteriaBenefitValuesController@remove');
 
      /**
      *
@@ -102,11 +90,24 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
      * 
      */
 
-     $router->get('values/', 'ValuesCriteriaController@index');
-     $router->get('value/{id}', 'ValuesCriteriaController@show');
-     $router->post('value/create', 'ValuesCriteriaController@store');
-     $router->put('value/{id}/update', 'ValuesCriteriaController@update');
-     $router->delete('value/{id}/delete/', 'ValuesCriteriaController@remove');
+     $router->get('values/', 'ValuesAlternatifController@index');
+     $router->get('value/{id}', 'ValuesAlternatifController@show');
+     $router->post('value/create', 'ValuesAlternatifController@store');
+     $router->put('value/{id}/update', 'ValuesAlternatifController@update');
+     $router->delete('value/{id}/delete/', 'ValuesAlternatifController@remove');
+
+     /**
+     *
+     * Create a new router
+     * For Enumerisation
+     * 
+     */
+
+     $router->get('enumerisation/', 'EnumerisationController@index');
+     $router->get('enumerisation/{id}', 'EnumerisationController@show');
+     $router->post('enumerisation/create', 'EnumerisationController@store');
+     $router->put('enumerisation/{id}/update', 'EnumerisationController@update');
+     $router->delete('enumerisation/{id}/delete/', 'EnumerisationController@remove');
      
 
      /**

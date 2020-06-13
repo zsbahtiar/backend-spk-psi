@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCriteriasBenefitValues extends Migration
+class CreateEnumerisationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateCriteriasBenefitValues extends Migration
      */
     public function up()
     {
-        Schema::create('criterias_benefit_values', function (Blueprint $table) {
+        Schema::create('enumerisation', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->char('name', 3)->unique();
+            $table->string('name', 10);
             $table->unsignedInteger('value');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateCriteriasBenefitValues extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('criterias_benefit_values');
+        Schema::dropIfExists('enumerisation');
     }
 }

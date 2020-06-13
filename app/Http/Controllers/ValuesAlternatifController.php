@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\CriteriaBenefitValues;
+use App\ValuesOfAlternatif;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
-class CriteriaBenefitValuesController extends Controller
+
+class ValuesAlternatifController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -16,7 +17,7 @@ class CriteriaBenefitValuesController extends Controller
      */
     public function __construct()
     {
-        $this->CriteriaBenefit = new CriteriaBenefitValues();
+        $this->value = new ValuesOfAlternatif();
     }
 
     //
@@ -26,7 +27,7 @@ class CriteriaBenefitValuesController extends Controller
         try{
             return response()->json([
                 'success' => true,
-                'data' => $this->CriteriaBenefit::all()],200);
+                'data' => $this->value->get_all()],200);
         }catch (QueryException $e){
             $errorCode = $e->errorInfo[0];
             return response()->json($this->_errorMessage($errorCode));
@@ -34,16 +35,19 @@ class CriteriaBenefitValuesController extends Controller
     }
     public function show($id)
     {
-
         try{
-            $CriBen = $this->CriteriaBenefit::where('id',$id)->get();
-            $isExists = count($CriBen) == 1;
-            if($isExists){
+            $values = $this->value->get_select($id);
+            $isExists = count($values) == 1;
+            if($isExists){ 
                 return response()->json([
                     'success' => true,
-                    'data' => $CriBen
+                    'data' => $values,
                 ],200);
             }
+            return response()->json([
+                        'success' => true,
+                        'message' => 'not found'
+                    ],200);
         }catch (QueryException $e){
             $errorCode = $e->errorInfo[0];
             return response()->json($this->_errorMessage($errorCode));
@@ -52,9 +56,11 @@ class CriteriaBenefitValuesController extends Controller
     public function store(Request $request)
     {
 
-        $name = $request->input('name');
+        $criteria_id = $request->input('criteria_id');
+        $alternatif_id = $request->input('alternatif_id');
         $value = $request->input('value');
-        if($name == null || $value == null){
+
+        if($criteria_id == null || $alternatif_id == null || $value == null){
             return response()->json([
                     'success' => false,
                     'message' => 'One of the required attributes were empty',
@@ -62,10 +68,11 @@ class CriteriaBenefitValuesController extends Controller
         }else{
                 try{
                     $data = array(
-                        'name' => $name,
+                        'criteria_id' => $criteria_id,
+                        'alternatif_id' => $alternatif_id,
                         'value' => $value
                     );
-                    $save = $this->CriteriaBenefit->new($data);  
+                    $save = $this->value->new($data);  
 
                     return response()->json([
                         'success' => true,
@@ -81,25 +88,27 @@ class CriteriaBenefitValuesController extends Controller
     }
     public function update($id,Request $request)
     {
-        $criteria = $this->CriteriaBenefit::where('id',$id)->limit(1)->get();
+        $criteria = $this->value::where('id',$id)->limit(1)->get();
         $isExists = count($criteria) == 1;
         
-        $name = $request->input('name');
+        $criteria_id = $request->input('criteria_id');
+        $alternatif_id = $request->input('alternatif_id');
         $value = $request->input('value');
 
         if($isExists){
-            if($name == null || $value == null){
+            if($criteria_id == null || $alternatif_id == null || $value == null){
                 return response()->json([
                     'success' => false,
                     'message' => 'One of the required attributes were empty',
                 ], 400);
             }else{
                 $data = array(
-                        'name' => $name,
+                        'criteria_id' => $criteria_id,
+                        'alternatif_id' => $alternatif_id,
                         'value' => $value
                     );
                 try{
-                    $update = $this->CriteriaBenefit::where('id',$id)->update($data);
+                    $update = $this->value::where('id',$id)->update($data);
                     
                     return response()->json([
                         'success' => true,
@@ -126,7 +135,7 @@ class CriteriaBenefitValuesController extends Controller
     public function remove($id)
     {
         try{
-            $data = $this->CriteriaBenefit::where('id', $id)->first();
+            $data = $this->value::where('id', $id)->first();
             $data->delete();
             return response()->json([
                 'success' => true,

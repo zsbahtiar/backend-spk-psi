@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 // use Laravel\Lumen\Auth\Authorizable;
 
-class CriteriaBenefitValues extends Model// implements AuthenticatableContract, AuthorizableContract
+class Enumerisation extends Model// implements AuthenticatableContract, AuthorizableContract
 {
-    protected $table = 'criterias_benefit_values';
+    protected $table = 'enumerisation';
     // use Authenticatable, Authorizable;
 
     /**
@@ -42,9 +42,9 @@ class CriteriaBenefitValues extends Model// implements AuthenticatableContract, 
 
     public function isBenefit($id)
     {
-        return DB::table('values_of_criteria')
-            ->join('criterias', 'values_of_criteria.criteria_id', '=', 'criterias.id')
+        return DB::table('values_of_alternatif')
+            ->join('criterias', 'values_of_alternatif.criteria_id', '=', 'criterias.id')
             ->select('criterias.category')
-            ->where('values_of_criteria.id', $id)->get();
+            ->where('values_of_alternatif.id', $id)->get();
     }
 }

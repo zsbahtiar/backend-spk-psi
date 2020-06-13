@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-// use App\Result;
 use App\Alternatif;
-use App\CriteriaBenefitValues;
-use App\ValuesOfCriteria;
+use App\Enumerisation;
+use App\ValuesOfAlternatif;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
@@ -29,10 +28,10 @@ class ResultController extends Controller
         
     }
 
-    private function _changeToBenefit($name)
+    private function _changeToNum($name)
     {
-        $benefit = new CriteriaBenefitValues();
-        $changer = $benefit::where('name',$name)->get();
+        $enumerisation = new Enumerisation();
+        $changer = $enumerisation::where('name',$name)->get();
         return $changer[0]->value;
     }
 
@@ -65,7 +64,7 @@ class ResultController extends Controller
                     'alternatif_no_induk_dta'   => $value->no_induk_dta,
                     'alternatif_name'   => $value->name,
                     'dta_name'  => $value->dta_name,
-                    'value' => $this->_getValueOf($value->id,'benefit')
+                    'value' => $this->_getValueOf($value->id,'yes')
                     
                 ];
             }
@@ -118,19 +117,19 @@ class ResultController extends Controller
             return response()->json($this->_errorMessage($errorCode));
         }
     }
-    private function _getValueOf($alternatif,$benefit=null)
+    private function _getValueOf($alternatif,$enumerisation=null)
     {
         try{
-            $ValueOfAlternatif = new ValuesOfCriteria();
+            $ValueOfAlternatif = new ValuesOfAlternatif();
             $result = $ValueOfAlternatif->ValueToResult($alternatif); 
-            if($benefit=='benefit'){
+            if($enumerisation=='yes'){
                 $valueAlternatif='';
                 foreach ($result as $key => $value) {
-                    if($value->criteria_category != 'non'){
-                            $valueAlternatif = $this->_changeToBenefit($value->value);
-                        }else{
-                            $valueAlternatif = (float)$value->value;
-                        }
+                    if(is_numeric($value->value)){
+                        $valueAlternatif = (float)$value->value;
+                    }else{
+                        $valueAlternatif = $this->_changeToNum($value->value);
+                    }
 
                     $data[$key] = [
                         'criteria_id'   => $value->criteria_id,

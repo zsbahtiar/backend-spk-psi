@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\ValuesOfCriteria;
+use App\Enumerisation;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
-
-class ValuesCriteriaController extends Controller
+class EnumerisationController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -17,7 +16,7 @@ class ValuesCriteriaController extends Controller
      */
     public function __construct()
     {
-        $this->value = new ValuesOfCriteria();
+        $this->Enumerisation = new Enumerisation();
     }
 
     //
@@ -27,7 +26,7 @@ class ValuesCriteriaController extends Controller
         try{
             return response()->json([
                 'success' => true,
-                'data' => $this->value->get_all()],200);
+                'data' => $this->Enumerisation::all()],200);
         }catch (QueryException $e){
             $errorCode = $e->errorInfo[0];
             return response()->json($this->_errorMessage($errorCode));
@@ -35,13 +34,14 @@ class ValuesCriteriaController extends Controller
     }
     public function show($id)
     {
+
         try{
-            $values = $this->value->get_select($id);
-            $isExists = count($values) == 1;
-            if($isExists){ 
+            $CriBen = $this->Enumerisation::where('id',$id)->get();
+            $isExists = count($CriBen) == 1;
+            if($isExists){
                 return response()->json([
                     'success' => true,
-                    'data' => $values,
+                    'data' => $CriBen
                 ],200);
             }
             return response()->json([
@@ -56,11 +56,9 @@ class ValuesCriteriaController extends Controller
     public function store(Request $request)
     {
 
-        $criteria_id = $request->input('criteria_id');
-        $alternatif_id = $request->input('alternatif_id');
+        $name = $request->input('name');
         $value = $request->input('value');
-
-        if($criteria_id == null || $alternatif_id == null || $value == null){
+        if($name == null || $value == null){
             return response()->json([
                     'success' => false,
                     'message' => 'One of the required attributes were empty',
@@ -68,11 +66,10 @@ class ValuesCriteriaController extends Controller
         }else{
                 try{
                     $data = array(
-                        'criteria_id' => $criteria_id,
-                        'alternatif_id' => $alternatif_id,
+                        'name' => $name,
                         'value' => $value
                     );
-                    $save = $this->value->new($data);  
+                    $save = $this->Enumerisation->new($data);  
 
                     return response()->json([
                         'success' => true,
@@ -88,27 +85,25 @@ class ValuesCriteriaController extends Controller
     }
     public function update($id,Request $request)
     {
-        $criteria = $this->value::where('id',$id)->limit(1)->get();
+        $criteria = $this->Enumerisation::where('id',$id)->limit(1)->get();
         $isExists = count($criteria) == 1;
         
-        $criteria_id = $request->input('criteria_id');
-        $alternatif_id = $request->input('alternatif_id');
+        $name = $request->input('name');
         $value = $request->input('value');
 
         if($isExists){
-            if($criteria_id == null || $alternatif_id == null || $value == null){
+            if($name == null || $value == null){
                 return response()->json([
                     'success' => false,
                     'message' => 'One of the required attributes were empty',
                 ], 400);
             }else{
                 $data = array(
-                        'criteria_id' => $criteria_id,
-                        'alternatif_id' => $alternatif_id,
+                        'name' => $name,
                         'value' => $value
                     );
                 try{
-                    $update = $this->value::where('id',$id)->update($data);
+                    $update = $this->Enumerisation::where('id',$id)->update($data);
                     
                     return response()->json([
                         'success' => true,
@@ -135,7 +130,7 @@ class ValuesCriteriaController extends Controller
     public function remove($id)
     {
         try{
-            $data = $this->value::where('id', $id)->first();
+            $data = $this->Enumerisation::where('id', $id)->first();
             $data->delete();
             return response()->json([
                 'success' => true,

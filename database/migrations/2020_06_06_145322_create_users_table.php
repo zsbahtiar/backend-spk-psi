@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->enum('gender', ['male', 'female']);
             $table->string('email')->unique();
             $table->string('token_login')->nullable();
+            $table->unsignedInteger('token_exp')->nullable();
             $table->timestamps();
         });
     }

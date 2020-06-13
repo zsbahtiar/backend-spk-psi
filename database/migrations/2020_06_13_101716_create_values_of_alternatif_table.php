@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateValuesOfCriteriaTable extends Migration
+class CreateValuesOfAlternatifTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateValuesOfCriteriaTable extends Migration
      */
     public function up()
     {
-        Schema::create('values_of_criteria', function (Blueprint $table) {
+        Schema::create('values_of_alternatif', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('criteria_id');
             $table->bigInteger('alternatif_id');
@@ -43,6 +43,6 @@ class CreateValuesOfCriteriaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('values_of_criteria');
+        Schema::dropIfExists('values_of_alternatif');
     }
 }
