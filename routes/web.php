@@ -117,6 +117,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
      * 
      */
 
+     $router->get('solve', 'ResultController@index');
      $router->get('solve/{step}', 'ResultController@solve');
 
 });
