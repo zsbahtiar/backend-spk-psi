@@ -26,6 +26,22 @@ class ResultController extends Controller
 
     public function index()
     {
+
+        return response()->json([
+            'success'   => true,
+            'data' => [
+                url("/api/v1/solve/first"),
+                url("/api/v1/solve/two"),
+                url("/api/v1/solve/fjmaxmin"),
+                url("/api/v1/solve/normalization"),
+                url("/api/v1/solve/weighted"),
+                url("/api/v1/solve/srmaxmin"),
+                url("/api/v1/solve/q"),
+                url("/api/v1/solve/v05"),
+                url("/api/v1/solve/v06"),
+                url("/api/v1/solve/v07")
+            ]
+        ]);
         
     }
 
