@@ -41,6 +41,12 @@ class ResultController extends Controller
         $this->defineMatrix = $this->_convertToMatrix(); 
         $this->FjMaxMin = $this->_FjMaxMin();
         $this->normalized = $this->_normalization();
+        $this->weighted = $this->_weighting();
+        $this->SRMaxMin = $this->_SRMaxMin();
+        $this->q = $this->_getQ();
+        $this->v05 = $this->_v05();
+        $this->v06 = $this->_v06();
+        $this->v07 = $this->_v07();
         if($step == 'first'){
             return response()->json([
                 'success' => true,
@@ -62,6 +68,42 @@ class ResultController extends Controller
                 'success'   => true,
                 'data' => $this->normalized
             ]);
+        }elseif($step == 'weighted'){
+            return response()->json([
+                'success'   => true,
+                'data' => $this->weighted
+            ]);
+        }elseif($step == 'srmaxmin'){
+            return response()->json([
+                'success'   => true,
+                'data' => $this->SRMaxMin
+            ]);
+        }elseif($step == 'q'){
+            return response()->json([
+                'success'   => true,
+                'data' => $this->q
+            ]);
+        }elseif($step == 'v05'){
+            return response()->json([
+                'success'   => true,
+                'data' => $this->v05
+            ]);
+        }elseif($step == 'v06'){
+            return response()->json([
+                'success'   => true,
+                'data' => $this->v06
+            ]);
+        }elseif($step == 'v07'){
+            return response()->json([
+                'success'   => true,
+                'data' => $this->v07
+            ]);
+        }
+        else{
+            return response()->json([
+                'success'   => false,
+                'message'   => 'not found'
+            ],400);
         }
 
         
@@ -203,16 +245,16 @@ class ResultController extends Controller
         return $data;
     }
 
-    private function _getCriteria()
+    private function _getWeightOfCriteria()
     {
         $data = array();
 
         $criteria = new Criteria();
 
-        $criteriaID = $criteria::select('id')->orderByRaw('alias')->get();
+        $criteriaID = $criteria::select('weight')->orderByRaw('alias')->get();
 
         foreach ($criteriaID as $key => $value) {
-            array_push($data,$value["id"]);
+            array_push($data,$value["weight"]);
         }
 
 
@@ -288,7 +330,181 @@ class ResultController extends Controller
 
     }
 
-  
-    
+    private function _weighting()
+    {
+        $weight = $this->_getWeightOfCriteria();
+        $value = array();
+        $data = array();
+        $Sij =0;
+        $Rij =0;
+        try{
+            for($i = 0; $i < count($this->normalized); $i++){
+                for($j = 0; $j < count($this->normalized[$i]["value"]); $j++){
+
+                    $value[$j] = array(
+                        'criteria_id'   => $this->normalized[$i]["value"][$j]["criteria_id"],
+                        'criteria_alias'    => $this->normalized[$i]["value"][$j]["criteria_alias"],
+                        'criteria_category' => $this->normalized[$i]["value"][$j]["criteria_category"],
+                        'value' => number_format($this->normalized[$i]["value"][$j]["value"] * ($weight[$j] /100),4)
+                    );
+                    $Sij += $value[$j]["value"];
+                    if($Rij < $value[$j]["value"]) $Rij = $value[$j]["value"];
+
+                }
+                $data[$i] = [
+                    'alternatif_id'    => $this->normalized[$i]["alternatif_id"],
+                    'alternatif_no_induk_dta'   => $this->normalized[$i]["alternatif_no_induk_dta"],
+                    'alternatif_name'   =>$this->normalized[$i]["alternatif_name"],
+                    'dta_name'  => $this->normalized[$i]["dta_name"],
+                    'value' => $value,
+                    'Si'   => $this->_getSiRi($value,"S"),
+                    'Ri'   => $this->_getSiRi($value,"R")
+                ];
+                
+
+            }
+            
+        }catch(QueryException $e){
+            $errorCode = $e->errorInfo[0];
+            return response()->json($this->_errorMessage($errorCode));
+        }
+
+        return $data;
+    }
+
+    private function _getSiRi($data,$type)
+    {
+        $S = 0;
+        $R = 0;
+        if($type == "S"){
+            for($i=0 ; $i < count($data);$i++){
+                $S+= $data[$i]["value"];
+            }
+            return number_format($S,4);
+        }elseif($type == "R"){
+            for($i = 0; $i < count($data);$i++){
+                if($R < $data[$i]["value"]){
+                    $R = $data[$i]["value"];
+                }
+            }
+
+            return number_format($R,4);
+        }
+    }
+
+    private function _SRMaxMin()
+    {
+        $tempS = array();
+        $tempR = array();
+        for($i = 0; $i < count($this->weighted); $i++){
+            $tempR[$i] = $this->weighted[$i]["Ri"];
+            $tempS[$i] = $this->weighted[$i]["Si"];
+        }
+
+        $data = array(
+            "S*"  => min($tempS),
+            "S-"  => max($tempS),
+            "R*"  => min($tempR),
+            "R-"  => max($tempR),
+        );
+
+        return $data;
+
+    }
+
+    private function _getQ()
+    {
+
+        for($i = 0; $i < count($this->weighted); $i++){
+            
+            $data[$i] = [
+                'alternatif_id'    => $this->weighted[$i]["alternatif_id"],
+                'alternatif_no_induk_dta'   => $this->weighted[$i]["alternatif_no_induk_dta"],
+                'alternatif_name'   =>$this->weighted[$i]["alternatif_name"],
+                'dta_name'  => $this->weighted[$i]["dta_name"],
+                '0.5' => (float)$this->_calcQi($this->weighted[$i]["Si"],$this->weighted[$i]["Ri"],0.5),
+                '0.6' => (float)$this->_calcQi($this->weighted[$i]["Si"],$this->weighted[$i]["Ri"],0.6),
+                '0.7' => (float)$this->_calcQi($this->weighted[$i]["Si"],$this->weighted[$i]["Ri"],0.7)
+                
+            ];
+        }
+
+        return $data;
+    }
+
+    private function _calcQi($Si,$Ri,$v)
+    {
+        /*
+        |
+        |Q i = v [(Si − S* )/(s- - s*)] + (1 − v) [(Ri− R* )/(R- - R*)]
+        |
+        |*/
+
+
+        return number_format(((($v*($Si -$this->SRMaxMin["S*"]) / ($this->SRMaxMin["S-"] - $this->SRMaxMin["S*"])) + ((1-$v)*($Ri-$this->SRMaxMin["R*"]) / ($this->SRMaxMin["R-"] - $this->SRMaxMin["R*"])))),4);
+    }
+    private function _v05()
+    {
+        $data = array();
+        $no = 0;
+        $q = $this->q;
+        $keys = array_column($q, '0.5');
+        array_multisort($keys, SORT_ASC, $q);
+        foreach ($q as $key) {
+            $no++;
+            $data[]=[
+                'alternatif_id'    => $key["alternatif_id"],
+                'alternatif_no_induk_dta'   => $key["alternatif_no_induk_dta"],
+                'alternatif_name'   =>$key["alternatif_name"],
+                'dta_name'  => $key["dta_name"],
+                'value' => $key["0.5"],
+                'rank'  => $no
+                
+            ];
+        }
+        return $data;
+    }
+    private function _v06()
+    {
+        $data = array();
+        $no = 0;
+        $q = $this->q;
+        $keys = array_column($q, '0.6');
+        array_multisort($keys, SORT_ASC, $q);
+        foreach ($q as $key) {
+            $no++;
+            $data[]=[
+                'alternatif_id'    => $key["alternatif_id"],
+                'alternatif_no_induk_dta'   => $key["alternatif_no_induk_dta"],
+                'alternatif_name'   =>$key["alternatif_name"],
+                'dta_name'  => $key["dta_name"],
+                'value' => $key["0.6"],
+                'rank'  => $no
+                
+            ];
+        }
+        return $data;
+    }
+    private function _v07()
+    {
+        $data = array();
+        $no = 0;
+        $q = $this->q;
+        $keys = array_column($q, '0.7');
+        array_multisort($keys, SORT_ASC, $q);
+        foreach ($q as $key) {
+            $no++;
+            $data[]=[
+                'alternatif_id'    => $key["alternatif_id"],
+                'alternatif_no_induk_dta'   => $key["alternatif_no_induk_dta"],
+                'alternatif_name'   =>$key["alternatif_name"],
+                'dta_name'  => $key["dta_name"],
+                'value' => $key["0.7"],
+                'rank'  => $no
+                
+            ];
+        }
+        return $data;
+    }
     
 }
