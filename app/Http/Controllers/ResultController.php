@@ -17,13 +17,7 @@ class ResultController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        // $this->result = new Result();
-    }
-
-    //
-
+    
     public function index()
     {
 
