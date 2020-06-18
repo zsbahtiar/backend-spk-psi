@@ -26,7 +26,7 @@ class CriteriaController extends Controller
         try{
             return response()->json([
                 'success' => true,
-                'data' => $this->criteria::all()],200);
+                'data' => $this->criteria::orderByRaw('criterias.id ASC')->get()],200);
         }catch (QueryException $e){
             $errorCode = $e->errorInfo[0];
             return response()->json($this->_errorMessage($errorCode));
