@@ -200,6 +200,7 @@ class ResultController extends Controller
             $ValueOfAlternatif = new ValuesOfAlternatif();
             $result = $ValueOfAlternatif->ValueToResult($alternatif); 
             if($enumerisation=='yes'){
+                $data = array();
                 $valueAlternatif='';
                 foreach ($result as $key => $value) {
                     if(is_numeric($value->value)){
