@@ -1,0 +1,257 @@
+@startuml
+class Model{
+	
+}
+class DB{
+	
+}
+class Controller{
+
+}
+class Request{
+
+}
+class QueryException{
+ 
+}
+class Alternatif extends Model{
+	# alternatif : string
+	# fillable : array
+	# hidden : array
+	+ dta_id : int
+ 	+ no_induk_dta : string
+ 	+ nik : string
+ 	+ name : string
+ 	+ gender : string
+ 	# table : string
+ 	+ new()
+ 	+ get_select()
+ 	+ get_all()
+ 	+ AlternatifToResult()
+ 	+ save()
+ }
+
+class Criteria extends Model{
+	+ name : string
+ 	+ alias : string
+ 	+ category : string
+ 	+ weight : int
+ 	# alternatif : string
+ 	# fillable : array
+ 	# hidden : array
+ 	+ new()
+ 	+ save()
+}
+
+class Dta extends Model{
+ # table : string
+ # fillable : array
+ + no_stastik : string
+ + name : string
+ + address : string
+ + headmaster : string
+ # hidden : array
+ + new()
+ + save()
+ }
+
+ class Enumerisation extends Model{
+ # table : string
+ # fillable : array
+ + name : string
+ + value : int
+ # hidden : array
+ + new()
+ + save()
+ }
+
+class Operator extends Model{
+	# table : string
+	# fillable : array
+	+ dta_id : int
+	+ name : string
+	+ gender : string
+	+ email : string
+	# hidden : array
+	+ new()
+	+ save()
+}
+
+class User extends Model{
+	# table : string
+	# fillable : array
+	+ name : string
+	+ gender : string
+	+ email : string
+	+ token_login : string 
+	# hidden : array
+	+ new()
+	+ save()
+}
+
+class ValuesOfAlternatif extends Model{
+	# table : string
+	# fillable : array
+	+ criteria_id : int
+	+ alternatif_id : int
+	+ value : int
+	# hidden : array
+	+ new()
+	+ save()
+	+ get_select()
+	+ get_all()
+	+ khsusus()
+	+ ValueToResult()
+}
+
+ DB o-- Alternatif
+ DB o-- ValuesOfAlternatif
+
+
+ class AlternatifController extends Controller{
+ 	+ alternatif : object
+ 	+ __construct()
+ 	+ index()
+ 	+ show()
+ 	+ store()
+ 	+ update()
+ 	+ remove()
+ 	- _errorMessage()
+
+ }
+
+ Alternatif o-- AlternatifController
+ Request o-- AlternatifController
+ QueryException o-- AlternatifController
+
+ class CriteriaController extends Controller{
+  + criteria : object
+  + __construct()
+  + index()
+  + show()
+  + store()
+  + update()
+  + remove()
+  - _errorMessage()
+ }
+
+ Criteria o-- CriteriaController
+ Request o-- CriteriaController
+ QueryException o-- CriteriaController
+
+ class DtaController extends Controller{
+  + Dta : object
+  + __construct()
+  + index()
+  + show()
+  + store()
+  + update()
+  + remove()
+  - _errorMessage()
+ }
+
+ Dta o-- DtaController
+ Request o-- DtaController
+ QueryException o-- DtaController
+
+ class EnumerisationController extends Controller{
+  + Enumerisation : object
+  + __construct()
+  + index()
+  + show()
+  + store()
+  + update()
+  + remove()
+  - _errorMessage()
+ }
+
+ Enumerisation o-- EnumerisationController
+ Request o-- EnumerisationController
+ QueryException o-- EnumerisationController
+
+ class OperatorController extends Controller{
+  + operator : object
+  + __construct()
+  + index()
+  + show()
+  + store()
+  + update()
+  + remove()
+  - _errorMessage()
+ }
+
+ Operator o-- OperatorController
+ Request o-- OperatorController
+ QueryException o-- OperatorController
+
+ class UserController extends Controller{
+  + user : object
+  + __construct()
+  + index()
+  + show()
+  + store()
+  + update()
+  + remove()
+  - _errorMessage()
+ }
+
+ User o-- UserController
+ Request o-- UserController
+ QueryException o-- UserController
+
+class ValuesAlternatifController extends Controller{
+  + value : object
+  + __construct()
+  + index()
+  + show()
+  + store()
+  + update()
+  + remove()
+  - _errorMessage()
+}
+
+ValuesOfAlternatif o-- ValuesAlternatifController
+Request o-- ValuesAlternatifController
+QueryException o-- ValuesAlternatifController
+
+class ResultController extends Controller{
+  + defineMatrix : array
+  + FjMaxMin : array
+  + normalized : array
+  + weighted : array
+  + SRMaxMin : array
+  + q : array
+  + v05 : array
+  + v06 : array
+  + v07 : array 
+  + index()
+  + solve()
+  - _changeToNum()
+  - _rawData()
+  - _convertToMatrix()
+  - _errorMessage()
+  - _getAlternatif()
+  - _getValueOf()
+  - _FjMaxMin()
+  - _getValue()
+  - _getWeightOfCriteria()
+  - _normalization()
+  - _calcNormalization()
+  - _weighting()
+  - _getSiRi()
+  - _SRMaxMin()
+  - _getQ()
+  - _calcQi()
+  - _v05()
+  - _v06()
+  - _v07()
+}
+
+Alternatif o-- ResultController
+Enumerisation o-- ResultController
+Criteria o-- ResultController
+ValuesOfAlternatif o-- ResultController
+Request o-- ResultController
+QueryException o-- ResultController
+
+@enduml

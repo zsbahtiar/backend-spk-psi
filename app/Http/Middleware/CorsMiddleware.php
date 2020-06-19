@@ -17,10 +17,11 @@ class CorsMiddleware
     {
         $headers = [
             'Access-Control-Allow-Origin'      => '*',
+            'Connection'                       => 'keep-alive',
             'Access-Control-Allow-Methods'     => 'POST, GET, OPTIONS, PUT, DELETE',
             'Access-Control-Allow-Credentials' => 'true',
             'Access-Control-Max-Age'           => '86400',
-            'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With'
+            'Access-Control-Allow-Headers'     => 'Content-Type, Authorization, X-Requested-With, Cache-Control'
         ];
 
         if ($request->isMethod('OPTIONS'))
