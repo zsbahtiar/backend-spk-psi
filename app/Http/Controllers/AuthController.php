@@ -36,8 +36,9 @@ class AuthController extends Controller
         if (! $token = auth()->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+        $email = $request->input('email');
 
-        return $this->createNewToken($token);
+        return $this->createNewToken($token,$email);
     }
     public function logout()
     {
@@ -62,9 +63,10 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function createNewToken($token)
+    protected function createNewToken($token,$email=null)
     {
         return response()->json([
+            'name'  => auth()->user()->name,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
