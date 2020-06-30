@@ -17,6 +17,7 @@ class ValuesAlternatifController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         $this->value = new ValuesOfAlternatif();
     }
 

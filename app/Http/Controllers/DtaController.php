@@ -16,6 +16,7 @@ class DtaController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         $this->Dta = new Dta();
     }
 
