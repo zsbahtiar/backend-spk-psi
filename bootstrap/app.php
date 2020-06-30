@@ -105,6 +105,15 @@ $app->register(App\Providers\CatchAllOptionsRequestsProvider::class);
 |
 */
 $app->register(\Thedevsaddam\LumenRouteList\LumenRouteListServiceProvider::class);
+
+
+/*
+* JWT
+*
+*
+*/
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Chuckrincon\LumenConfigDiscover\DiscoverServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
