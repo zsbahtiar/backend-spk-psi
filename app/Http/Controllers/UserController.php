@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
@@ -16,6 +17,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('auth');
         $this->user = new User();
     }
 
@@ -54,35 +56,29 @@ class UserController extends Controller
     }
     public function store(Request $request)
     {
-        $name = $request->input('name');
-        $gender = $request->input('gender');
-        $email = $request->input('email');
 
-        if($name == null || $gender == null || $email == null){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'gender'    => 'required',
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        try{
+            $user = $this->user->create(array_merge(
+                $validator->validated(),
+                ['password' => app('hash')->make($request->password)]
+            ));
+
+
             return response()->json([
-                'success' => false,
-                'message' => 'One of the required attributes were empty',
-            ], 400);
-        }else{
-            try{
-                $data = array(
-                    'name'  => $name,
-                    'gender'    => $gender,
-                    'email' => $email
-                );
-                $save = $this->user->new($data);  
-
-                return response()->json([
-                    'success' => true,
-                    'data' => $data
-                ],201);  
-            }catch (QueryException $e){
-                $errorCode = $e->errorInfo[0];
-                return response()->json($this->_errorMessage($errorCode));
-            }    
-        }
-        
-        
+                'success' => true,
+                'data' => $user
+            ],201);
+        }catch (QueryException $e){
+            $errorCode = $e->errorInfo[0];
+            return response()->json($this->_errorMessage($errorCode));
+        }            
     }
     public function update($id,Request $request)
     {
